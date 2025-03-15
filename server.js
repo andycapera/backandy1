@@ -9,14 +9,14 @@ app.use(express.json());
 app.use(cors()); // Habilita CORS para todos los orígenes
 
 // Conexión a MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('Conectado a MongoDB'))
-    .catch(err => console.error(err));
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000, // Espera hasta 30s antes de fallar
+})
+.then(() => console.log('✅ Conectado a MongoDB Atlas'))
+.catch(err => console.error('❌ Error de conexión a MongoDB:', err));
 
-// Definir esquema y modelo
-const ItemSchema = new mongoose.Schema({
-    name: String
-});
 const Item = mongoose.model('Item', ItemSchema);
 
 // Ruta de prueba
