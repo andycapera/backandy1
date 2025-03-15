@@ -5,11 +5,8 @@ const cors = require('cors');
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-    origin: "https://pruebas-110.netlify.app", // Cambia esto por la URL de tu frontend
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type"
-}));
+
+app.use(cors()); // Habilita CORS para todos los orígenes
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -27,14 +24,33 @@ app.get('/', (req, res) => {
     res.send('Servidor funcionando');
 });
 
-// Ruta para obtener datos desde MongoDB
+// // Ruta para obtener datos desde MongoDB
+// app.get('/items', async (req, res) => {
+//     const items = await Item.find();
+//     res.json(items);
+// });
+
+// // Ruta para agregar un nuevo item
+// app.post('/items', async (req, res) => {
+//     const newItem = new Item({ name: req.body.name });
+//     await newItem.save();
+//     res.json({ message: 'Item agregado' });
+// });
+
 app.get('/items', async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    
     const items = await Item.find();
     res.json(items);
 });
 
-// Ruta para agregar un nuevo item
 app.post('/items', async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
     const newItem = new Item({ name: req.body.name });
     await newItem.save();
     res.json({ message: 'Item agregado' });
